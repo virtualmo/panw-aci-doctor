@@ -20,15 +20,9 @@ CONFIG_FILENAME = "~/aci/.aci.conf"
 app = Flask(__name__)
 api = Api(app)
 
-# handler = logging.StreamHandler(sys.stdout)
-# handler.setFormatter(logging.Formatter(
-#     '%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-#app.logger.addHandler(handler)
 app.logger.setLevel(logging.DEBUG)
 
 base_url = ""
-# cookies = ""
-# tenant = ""
 
 def authenticate(username, password):
 	# create credentials structure
@@ -95,23 +89,31 @@ def create_uepg(uepg_config_dic,cookies):
 
 def quarantine_ip(target_ip):
 	cookies = authenticate(username,password)
-	app.logger.debug(cookies)
 	eps = get_eps(cookies)
 	ep_attr_v = find_ep(eps, target_ip)
 	if not ep_attr_v:
+		app.logger.debug("%s not found", target_ip)
 		return "IP not found!"
 	dn_list = ep_attr_v['dn'].split("/")
 	dn_tenant = dn_list[1]
 	dn_app = dn_list[2]
 	dn_epg = dn_list[3]
 	epg_config = get_epg(dn_tenant,dn_app,dn_epg,cookies)
+	if 'fvRsBd' not in epg_config['imdata'][0]:
+		app.logger.debug("Seems like IP is already part of uEPG")
+		return "404"
 	currentDT = datetime.datetime.now()	
+	for c in epg_config['imdata']:
+		if 'fvRsBd' in c:
+			uepg_config_dic['BRIDGEDOMAIN'] = c['fvRsBd']['attributes']['tnFvBDName']
+		elif 'fvRsDomAtt' in c:
+			uepg_config_dic['DOMAINNAME'] =  c['fvRsDomAtt']['attributes']['tDn']
+		elif 'fvRsPathAtt' in c:
+			uepg_config_dic['NODEATTR'] = create_node_attr(c['fvRsPathAtt']['attributes']['tDn'])
 	uepg_config_dic['MICROEPGNAME'] = "q-uepg-" + currentDT.strftime("%y%m%d%H%M%S")
-	uepg_config_dic['BRIDGEDOMAIN'] = epg_config['imdata'][0]['fvRsBd']['attributes']['tnFvBDName']
 	uepg_config_dic['MACADDR'] = ep_attr_v['mac']
 	uepg_config_dic['DNPATH'] = "uni/" + dn_tenant + "/" + dn_app + "/epg-" + uepg_config_dic['MICROEPGNAME']
-	uepg_config_dic['DOMAINNAME'] =  epg_config['imdata'][3]['fvRsDomAtt']['attributes']['tDn']
-	uepg_config_dic['NODEATTR'] = create_node_attr(epg_config['imdata'][4]['fvRsPathAtt']['attributes']['tDn'])
+
 	response = create_uepg(uepg_config_dic,cookies)
 	return response.status_code
 
