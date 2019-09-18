@@ -5,7 +5,6 @@ import re
 import sys
 import json
 import requests
-import datetime
 import logging
 from configparser import ConfigParser
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -13,14 +12,14 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from flask import Flask, request
 from flask_restful import Resource, Api
 
-debug = True
+debug = False
 
 CONFIG_FILENAME = "~/aci/.aci.conf"
 
 app = Flask(__name__)
 api = Api(app)
 
-app.logger.setLevel(logging.DEBUG)
+app.logger.setLevel(logging.INFO)
 
 base_url = ""
 
@@ -102,7 +101,6 @@ def quarantine_ip(target_ip):
 	if 'fvRsBd' not in epg_config['imdata'][0]:
 		app.logger.debug("Seems like IP is already part of uEPG")
 		return "404"
-	currentDT = datetime.datetime.now()	
 	for c in epg_config['imdata']:
 		if 'fvRsBd' in c:
 			uepg_config_dic['BRIDGEDOMAIN'] = c['fvRsBd']['attributes']['tnFvBDName']
@@ -110,7 +108,7 @@ def quarantine_ip(target_ip):
 			uepg_config_dic['DOMAINNAME'] =  c['fvRsDomAtt']['attributes']['tDn']
 		elif 'fvRsPathAtt' in c:
 			uepg_config_dic['NODEATTR'] = create_node_attr(c['fvRsPathAtt']['attributes']['tDn'])
-	uepg_config_dic['MICROEPGNAME'] = "q-uepg-" + currentDT.strftime("%y%m%d%H%M%S")
+	uepg_config_dic['MICROEPGNAME'] = "quarantine-uepg-" + dn_epg.split("-")[1] 
 	uepg_config_dic['MACADDR'] = ep_attr_v['mac']
 	uepg_config_dic['DNPATH'] = "uni/" + dn_tenant + "/" + dn_app + "/epg-" + uepg_config_dic['MICROEPGNAME']
 
@@ -145,6 +143,7 @@ api.add_resource(ACIMicroEPG, '/api/uepg/<string:ip_address>')
 
 if __name__ == '__main__':
 	secureConnection = True
+	os.environ["FLASK_ENV"] = "development"
 	cfgparser = ConfigParser()
 	try:
 		cfgparser.read(os.path.expanduser(CONFIG_FILENAME))
@@ -162,9 +161,15 @@ if __name__ == '__main__':
 		error("Config file doesn't contain (all) required authentication info")
 		sys.exit(1)
 	elif (('cert_path' not in cfgparser['aci_config']) or
-		('key_path' not in cfgparser['aci_config'])):
+		('key_path' not in cfgparser['aci_config']) or
+		cfgparser['aci_config']['cert_path'] == '' or
+		cfgparser['aci_config']['key_path'] == '' ):
 		secureConnection = False
-	
+
+	if ('DEBUG' in cfgparser['aci_config'] and cfgparser['aci_config']['DEBUG'].lower() == 'yes'):
+		debug = True
+		app.logger.setLevel(logging.DEBUG)
+
 	config = cfgparser['aci_config']
 
 	username = config["USER"]
@@ -174,10 +179,11 @@ if __name__ == '__main__':
 	if secureConnection:
 		cert_path = config["CERT_PATH"]
 		key_path = config["KEY_PATH"]
-	if 'PORT' in cfgparser['aci_config']:
+	if ('PORT' in cfgparser['aci_config'] and cfgparser['aci_config']['PORT'] != ''):
 		port = config["PORT"]
 	else:
 		port = 443 if secureConnection else 80
+
 
 	base_url = "https://" + apicAddr + "/api/"
 	uepg_config_dic = {
@@ -194,7 +200,7 @@ if __name__ == '__main__':
 			context = (os.path.expanduser(cert_path),os.path.expanduser(key_path))
 			app.run(debug=debug, host='0.0.0.0', ssl_context=context, port=port)
 		else:
-			app.logger.debug("Certificate and Key file are not found. Starting theStart app with http! %s", port)
+			app.logger.debug("Certificate and Key file are not found. Starting the app with http! %s", port)
 			app.run(debug=debug, host='0.0.0.0', port=port)
 	except Exception as e:
 		print("Could not start Flask APP!.")
