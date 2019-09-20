@@ -1,13 +1,13 @@
-# panw-aci-docter
+# panw-aci-doctor
 
-panw-aci-docter.py is a tool that allows Palo Alto Network Panorama to Dynamically Quarantine Infected Guests On Cisco ACI.
+panw-aci-doctor.py is a tool that allows Palo Alto Network Panorama to Dynamically Quarantine Infected Guests On Cisco ACI.
 
-The workflow that panw-aci-docter will take to Dynamically Quarantine Infected Guests is:
+The workflow that panw-aci-doctor will take to Dynamically Quarantine Infected Guests is:
 1. Source machine initiate malicious traffic.
 2. Palo Alto Networks NGFW detect the malicious activity.
 3. Palo Alto Networks NGFW share logs with Panorama.
-4. Panorama initiate API call via [HTTP profile](https://docs.paloaltonetworks.com/pan-os/9-0/pan-os-admin/monitoring/forward-logs-to-an-https-destination.html#) to the panw-aci-docter middleware. The API call from Panorama will include the IP address of the infected workload.
-5. Using the IP address, The panw-aci-docter resolves all the relevant information from APIC (I.e. workload MAC address, tenant, app-profile, BD, etc), and move that workload to a new micro EPG. Using [MAC Address Filter](https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/3-x/virtualization/b_ACI_Virtualization_Guide_3_0_1/b_ACI_Virtualization_Guide_3_0_1_chapter_0100.html) as selection attribute.
+4. Panorama initiate API call via [HTTP profile](https://docs.paloaltonetworks.com/pan-os/9-0/pan-os-admin/monitoring/forward-logs-to-an-https-destination.html#) to the panw-aci-doctor middleware. The API call from Panorama will include the IP address of the infected workload.
+5. Using the IP address, The panw-aci-doctor resolves all the relevant information from APIC (I.e. workload MAC address, tenant, app-profile, BD, etc), and move that workload to a new micro EPG. Using [MAC Address Filter](https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/3-x/virtualization/b_ACI_Virtualization_Guide_3_0_1/b_ACI_Virtualization_Guide_3_0_1_chapter_0100.html) as selection attribute.
 6. The infected workload will move to uEPG and it will be isolated.
 
 Workflow Diagram:
