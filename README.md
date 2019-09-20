@@ -34,7 +34,7 @@ $ pip3 install -r requirements.txt
 
 ### panw-aci-doctor machine configuration
 
-1. In home directry create new folder with the name
+1. In home directry create new folder on the home directory
 	```
     $ mkdir ~/panw-aci-doctor
 	```
