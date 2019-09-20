@@ -64,42 +64,42 @@ Workflow Diagram:
 
 ## Running
 
-	### Step 1: Configure HTTP profile on panorama to send API Calls to panw-aci-doctor
-	1. Select **Panorama** > **Server Profiles** > **HTTP** and **Add** a new HTTP Server Profile.
-	2. Enter a descriptive **Name**
-	3. Select **Add** to provide the details of panw-aci-doctor Manager.
-	4. Enter a **Name** for panw-aci-doctor.
-	5. Enter the **IP Address** of the pan-aci-doctor.
-	6. Select the **Protocol** (HTTP or HTTPS). The default Port is 80 or 443 respectively.
-	7. Select **POST** under the HTTP Method column.
+### Step 1: Configure HTTP profile on panorama to send API Calls to panw-aci-doctor
+1. Select **Panorama** > **Server Profiles** > **HTTP** and **Add** a new HTTP Server Profile.
+2. Enter a descriptive **Name**
+3. Select **Add** to provide the details of panw-aci-doctor Manager.
+4. Enter a **Name** for panw-aci-doctor.
+5. Enter the **IP Address** of the pan-aci-doctor.
+6. Select the **Protocol** (HTTP or HTTPS). The default Port is 80 or 443 respectively.
+7. Select **POST** under the HTTP Method column.
 
-	Example:
-	![Example1](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example1.png)
+Example:
+![Example1](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example1.png)
 
-	8. Select **Payload Format** and select the log type **Threat.**
-	9. Add a descriptive **Name**
-	10. In the **URI** section add "/api/uepg/$dst"
-	11. In the **Payload** section enter "Dummy"
-	12. Click **Ok**
-	Example:
-	![Example2](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example2.png)
+8. Select **Payload Format** and select the log type **Threat.**
+9. Add a descriptive **Name**
+10. In the **URI** section add "/api/uepg/$dst"
+11. In the **Payload** section enter "Dummy"
+12. Click **Ok**
+Example:
+![Example2](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example2.png)
 
-	### Step 2: Define the match criteria for when Panorama will trigger the API call to panw-aci-doctor, and attach the HTTP profile.
-	1. Select **Panorama** > **Log Settings**. 
-	2. On the **Threat** section click **Add**
-	3. Add a descriptive **Name**
-	4. Click **Add** on the **HTTP** section
-	5. Select the HTTP profile.
-	6. Click **Ok**
-	Example:
-	![Example3](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example3.png)
+### Step 2: Define the match criteria for when Panorama will trigger the API call to panw-aci-doctor, and attach the HTTP profile.
+1. Select **Panorama** > **Log Settings**. 
+2. On the **Threat** section click **Add**
+3. Add a descriptive **Name**
+4. Click **Add** on the **HTTP** section
+5. Select the HTTP profile.
+6. Click **Ok**
+Example:
+![Example3](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example3.png)
 
-	### Step 3:
-	1. Login to the panw-aci-doctor machine
-	2. Run the script
-	```
-	$ python3 panw-aci-doctor.py
-	```
+### Step 3:
+1. Login to the panw-aci-doctor machine
+2. Run the script
+```
+$ python3 panw-aci-doctor.py
+```
 
 
 ## Disclaimer
