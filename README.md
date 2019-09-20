@@ -64,7 +64,7 @@ Workflow Diagram:
 
 ## Running
 
-	**Step 1**: Configure HTTP profile on panorama to send API Calls to panw-aci-doctor
+	### Step 1: Configure HTTP profile on panorama to send API Calls to panw-aci-doctor
 	1. Select **Panorama** > **Server Profiles** > **HTTP** and **Add** a new HTTP Server Profile.
 	2. Enter a descriptive **Name**
 	3. Select **Add** to provide the details of panw-aci-doctor Manager.
@@ -84,7 +84,7 @@ Workflow Diagram:
 	Example:
 	![Example2](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example2.png)
 
-	**Step 2**: Define the match criteria for when Panorama will trigger the API call to panw-aci-doctor, and attach the HTTP profile.
+	### Step 2: Define the match criteria for when Panorama will trigger the API call to panw-aci-doctor, and attach the HTTP profile.
 	1. Select **Panorama** > **Log Settings**. 
 	2. On the **Threat** section click **Add**
 	3. Add a descriptive **Name**
@@ -94,7 +94,7 @@ Workflow Diagram:
 	Example:
 	![Example3](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/example3.png)
 
-	**Step 3**:
+	### Step 3:
 	1. Login to the panw-aci-doctor machine
 	2. Run the script
 	```
