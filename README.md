@@ -41,7 +41,7 @@ $ pip3 install -r requirements.txt
 
 2. Create new file named .doctor.config
 	```
-	$ vim .doctor.config
+	$ vim .doctor.conf
 	```
 
 3. Add the following to the .doctor.config file
