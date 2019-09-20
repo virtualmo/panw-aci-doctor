@@ -14,7 +14,7 @@ from flask_restful import Resource, Api
 
 debug = False
 
-CONFIG_FILENAME = "~/aci/.aci.conf"
+CONFIG_FILENAME = "~/panw-aci-doctor/.doctor.conf"
 
 app = Flask(__name__)
 api = Api(app)
@@ -151,26 +151,26 @@ if __name__ == '__main__':
 		error("Can't parse configuration file {}"
 			  "".format(os.path.expanduser(CONFIG_FILENAME)))
 		sys.exit(1)
-	if ('aci_config' not in cfgparser):
-		error("Configuration file {} doesn't contain 'aci_config' section"
+	if ('doctor_config' not in cfgparser):
+		error("Configuration file {} doesn't contain 'doctor_config' section"
 			"".format(os.path.expanduser(CONFIG_FILENAME)))
 		sys.exit(1)
-	elif (('user' not in cfgparser['aci_config']) or
-		('pass' not in cfgparser['aci_config']) or
-		('apic' not in cfgparser['aci_config'])):
+	elif (('user' not in cfgparser['doctor_config']) or
+		('pass' not in cfgparser['doctor_config']) or
+		('apic' not in cfgparser['doctor_config'])):
 		error("Config file doesn't contain (all) required authentication info")
 		sys.exit(1)
-	elif (('cert_path' not in cfgparser['aci_config']) or
-		('key_path' not in cfgparser['aci_config']) or
-		cfgparser['aci_config']['cert_path'] == '' or
-		cfgparser['aci_config']['key_path'] == '' ):
+	elif (('cert_path' not in cfgparser['doctor_config']) or
+		('key_path' not in cfgparser['doctor_config']) or
+		cfgparser['doctor_config']['cert_path'] == '' or
+		cfgparser['doctor_config']['key_path'] == '' ):
 		secureConnection = False
 
-	if ('DEBUG' in cfgparser['aci_config'] and cfgparser['aci_config']['DEBUG'].lower() == 'yes'):
+	if ('DEBUG' in cfgparser['doctor_config'] and cfgparser['doctor_config']['DEBUG'].lower() == 'yes'):
 		debug = True
 		app.logger.setLevel(logging.DEBUG)
 
-	config = cfgparser['aci_config']
+	config = cfgparser['doctor_config']
 
 	username = config["USER"]
 	password = config["PASS"]
@@ -179,7 +179,7 @@ if __name__ == '__main__':
 	if secureConnection:
 		cert_path = config["CERT_PATH"]
 		key_path = config["KEY_PATH"]
-	if ('PORT' in cfgparser['aci_config'] and cfgparser['aci_config']['PORT'] != ''):
+	if ('PORT' in cfgparser['doctor_config'] and cfgparser['doctor_config']['PORT'] != ''):
 		port = config["PORT"]
 	else:
 		port = 443 if secureConnection else 80
