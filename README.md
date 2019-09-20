@@ -14,19 +14,19 @@ Workflow Diagram:
 ![Workflow](https://raw.githubusercontent.com/mohanadelamin/panw-aci-doctor/master/images/workflow.png)
 
 ## Prerequisites
-	1. Python3
-	2. The following python modules (see requirements.txt)
-		- requests
-		- flask
-		- flask_restful
+1. Python3
+2. The following python modules (see requirements.txt)
+	- requests
+	- flask
+	- flask_restful
 		
 
 ## Installation
-	```
-    $ git clone https://github.com/mohanadelamin/panw-aci-doctor.git
-    $ cd panw-aci-doctor
-    $ pip3 install -r requirements.txt
-	```
+```
+$ git clone https://github.com/mohanadelamin/panw-aci-doctor.git
+$ cd panw-aci-doctor
+$ pip3 install -r requirements.txt
+```
     
 ## Configuration
 
